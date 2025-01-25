@@ -14,10 +14,10 @@ class skin(commands.Cog):
             "mojavatar", "reading", "bitzel", "pixel"
         ]
 
-    @app_commands.command(name="skin", description="Obtén la skin de un jugador de Minecraft")
+    @app_commands.command(name="skin", description="Get the skin of a Minecraft player")
     @app_commands.describe(
-        username="El nombre del jugador de Minecraft",
-        render="El tipo de render de la skin"
+        username="The name of the Minecraft player",
+        render="The type of skin rendering"
     )
     @app_commands.choices(
         render=[
@@ -29,7 +29,6 @@ class skin(commands.Cog):
         ]
     )
     async def skin(self, interaction: discord.Interaction, username: str, render: str):
-        # Consultar el UUID del jugador
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self.mojang_api_url}{username}", timeout=10) as uuid_response:
@@ -47,10 +46,8 @@ class skin(commands.Cog):
                         )
                         return
 
-            # Construir la URL de la skin
             skin_url = f"{self.skin_render_url}/{render}/{uuid}/full"
 
-            # Validar la respuesta de la API de render
             async with aiohttp.ClientSession() as session:
                 async with session.get(skin_url, timeout=10) as skin_response:
                     if skin_response.status != 200:
